@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DALL·E Image Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; }
+        #app { max-width: 600px; margin: 50px auto; text-align: center; }
+        input, button { padding: 10px; margin: 5px; }
+        img { max-width: 100%; margin-top: 20px; }
+        .loading { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Generate an Image with DALL·E</h1>
+        <input type="text" id="prompt" placeholder="Enter image description..." />
+        <button id="generate-button">Generate Image</button>
+        <div id="loading" class="loading" style="display: none;">Generating image...</div>
+        <div id="image-container">
+            <img id="generated-image" src="" alt="Generated Image" style="display: none;" />
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generate-button').addEventListener('click', async () => {
+            const prompt = document.getElementById('prompt').value.trim();
+            if (!prompt) {
+                alert('Please enter an image description.');
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('generated-image').style.display = 'none';
+
+            try {
+                const response = await fetch('/generate-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.imageUrl) {
+                    document.getElementById('generated-image').src = data.imageUrl;
+                    document.getElementById('generated-image').style.display = 'block';
+                } else {
+                    alert(data.error || 'Failed to generate image.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while generating the image.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
