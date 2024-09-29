@@ -26,8 +26,10 @@ app.post('/generate-image', async (req, res) => {
             'https://api.openai.com/v1/images/generations',
             {
                 prompt: prompt,
+                model: 'dall-e-3', // Replace with 'dall-e-3' when available
                 n: 1,
-                size: '512x512', // Adjusted size for faster generation
+                size: '1024x1024',
+                quality: 'standard', // Uncomment if the 'quality' parameter is supported
             },
             {
                 headers: {
@@ -40,7 +42,10 @@ app.post('/generate-image', async (req, res) => {
         const imageUrl = response.data.data[0].url;
         res.json({ imageUrl });
     } catch (error) {
-        console.error('OpenAI API Error:', error.response ? error.response.data : error.message);
+        console.error(
+            'OpenAI API Error:',
+            error.response ? error.response.data : error.message
+        );
         res.status(500).json({ error: 'Failed to generate image.' });
     }
 });
