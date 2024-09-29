@@ -28,7 +28,7 @@ app.post('/generate-image', async (req, res) => {
                 prompt: prompt,
                 model: 'dall-e-3', // Replace with 'dall-e-3' when available
                 n: 1,
-                size: '1024x1024',
+                size: '1792x1024',
                 quality: 'standard', // Uncomment if the 'quality' parameter is supported
             },
             {
